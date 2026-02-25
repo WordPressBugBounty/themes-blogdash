@@ -177,6 +177,11 @@ if ( ! class_exists( 'Bloghash_Customizer_Editors_Choice' ) ) :
 							'value'    => true,
 							'operator' => '==',
 						),
+						array(
+							'control'  => 'bloghash_editors_choice_data_source',
+							'value'    => 'category',
+							'operator' => '==',
+						),
 					),
 				),
 				'partial'           => array(

@@ -11,8 +11,8 @@ $bloghash_editors_choice_html = '';
 
 // Setup Post Items.
 $bloghash_editors_choice_data_source = bloghash_option( 'editors_choice_data_source' );
-$bloghash_editors_choice_categories  = bloghash_option( 'editors_choice_category' );
-$bloghash_editors_choice_posts       = bloghash_option( 'editors_choice_post' );
+$bloghash_editors_choice_categories  = array_filter( array_map( 'absint', (array) bloghash_option( 'editors_choice_category' ) ) );
+$bloghash_editors_choice_posts       = array_filter( array_map( 'absint', (array) bloghash_option( 'editors_choice_post' ) ) );
 
 $bloghash_editors_choice_orderby = bloghash_option( 'editors_choice_orderby' );
 $bloghash_editors_choice_order   = explode( '-', $bloghash_editors_choice_orderby );
@@ -24,21 +24,31 @@ $bloghash_args = array(
 	'order'               => $bloghash_editors_choice_order[1],
 	'orderby'             => $bloghash_editors_choice_order[0],
 	'ignore_sticky_posts' => true,
-	'tax_query'           => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-		array(
-			'taxonomy' => 'post_format',
-			'field'    => 'slug',
-			'terms'    => array( 'post-format-quote' ),
-			'operator' => 'NOT IN',
-		),
+);
+
+$tax_query = array(
+	array(
+		'taxonomy' => 'post_format',
+		'field'    => 'slug',
+		'terms'    => array( 'post-format-quote' ),
+		'operator' => 'NOT IN',
 	),
 );
 
 if ( ! empty( $bloghash_editors_choice_categories && $bloghash_editors_choice_data_source == 'category' ) ) {
-	$bloghash_args['category_name'] = implode( ', ', $bloghash_editors_choice_categories );
+	$tax_query[] = array(
+		'taxonomy' => 'category',
+		'field'    => 'term_id',
+		'terms'    => $bloghash_editors_choice_categories,
+		'operator' => 'IN',
+	);
 } elseif ( ! empty( $bloghash_editors_choice_posts && $bloghash_editors_choice_data_source == 'post' ) ) {
-	$bloghash_args['post_name__in'] = $bloghash_editors_choice_posts;
+	$bloghash_args['post__in'] = $bloghash_editors_choice_posts;
+	$bloghash_args['orderby'] = 'post__in'; // Override orderby to maintain the order of selected posts.
+	$bloghash_args['posts_per_page'] = count( $bloghash_editors_choice_posts ); // Set posts_per_page to the number of selected posts.
 }
+
+$bloghash_args['tax_query'] = $tax_query;
 
 $bloghash_args = apply_filters( 'bloghash_editors_choice_query_args', $bloghash_args );
 
@@ -50,8 +60,7 @@ if ( ! $bloghash_posts->have_posts() ) {
 }
 
 $bloghash_editors_choice_elements = (array) bloghash_option( 'editors_choice_elements' );
-
-$bloghash_posts_per_page = 'col-md-' . ceil( esc_attr( 12 / $bloghash_args['posts_per_page'] ) ) . ' col-sm-6 col-xs-12';
+$bloghash_classes = bloghash_template_part_column_classes( $bloghash_args['posts_per_page'] );
 $count                   = 0; // Initialize counter
 while ( $bloghash_posts->have_posts() ) :
 	$bloghash_posts->the_post();
@@ -59,7 +68,7 @@ while ( $bloghash_posts->have_posts() ) :
 	// Post items HTML markup.
 	ob_start();
 	?>
-	<div class="<?php echo esc_attr( $bloghash_posts_per_page ); ?>">
+	<div class="<?php echo esc_attr( $bloghash_classes ); ?>">
 		<div class="bloghash-post-item <?php echo $count === 2 ? 'style-1 end center slider-overlay-1' : 'style-3'; ?>">
 			<div class="bloghash-post-thumb">
 				<a href="<?php echo esc_url( bloghash_entry_get_permalink() ); ?>" tabindex="0"></a>

@@ -177,6 +177,11 @@ if ( ! class_exists( 'Blogdash_Customizer_Popular_Post' ) ) :
 							'value'    => true,
 							'operator' => '==',
 						),
+						array(
+							'control'  => 'bloghash_popular_post_data_source',
+							'value'    => 'category',
+							'operator' => '==',
+						),
 					),
 				),
 				'partial'           => array(

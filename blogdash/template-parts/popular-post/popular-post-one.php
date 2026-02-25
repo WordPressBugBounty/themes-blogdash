@@ -11,8 +11,8 @@ $bloghash_popular_post_html = '';
 
 // Setup Post Items.
 $bloghash_popular_post_data_source = bloghash_option( 'popular_post_data_source' );
-$bloghash_popular_post_categories  = bloghash_option( 'popular_post_category' );
-$bloghash_popular_post_posts       = bloghash_option( 'popular_post_post' );
+$bloghash_popular_post_categories  = array_filter( array_map( 'absint', (array) bloghash_option( 'popular_post_category' ) ) );
+$bloghash_popular_post_posts       = array_filter( array_map( 'absint', (array) bloghash_option( 'popular_post_post' ) ) );
 
 $bloghash_popular_post_orderby = bloghash_option( 'popular_post_orderby' );
 $bloghash_popular_post_order   = explode( '-', $bloghash_popular_post_orderby );
@@ -24,22 +24,31 @@ $bloghash_args = array(
 	'order'               => $bloghash_popular_post_order[1],
 	'orderby'             => $bloghash_popular_post_order[0],
 	'ignore_sticky_posts' => true,
-	'tax_query'           => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-		array(
-			'taxonomy' => 'post_format',
-			'field'    => 'slug',
-			'terms'    => array( 'post-format-quote' ),
-			'operator' => 'NOT IN',
-		),
+);
+
+$tax_query = array(
+	array(
+		'taxonomy' => 'post_format',
+		'field'    => 'slug',
+		'terms'    => array( 'post-format-quote' ),
+		'operator' => 'NOT IN',
 	),
 );
 
 if ( ! empty( $bloghash_popular_post_categories && $bloghash_popular_post_data_source == 'category' ) ) {
-	$bloghash_args['category_name'] = implode( ', ', $bloghash_popular_post_categories );
+	$tax_query[] = array(
+		'taxonomy' => 'category',
+		'field'    => 'term_id',
+		'terms'    => $bloghash_popular_post_categories,
+		'operator' => 'IN',
+	);
 } elseif ( ! empty( $bloghash_popular_post_posts && $bloghash_popular_post_data_source == 'post' ) ) {
-	$bloghash_args['post_name__in'] = $bloghash_popular_post_posts;
+	$bloghash_args['post__in'] = $bloghash_popular_post_posts;
+	$bloghash_args['orderby'] = 'post__in'; // Override orderby to maintain the order of selected posts.
+	$bloghash_args['posts_per_page'] = count( $bloghash_popular_post_posts ); // Set posts_per_page to the number of selected posts.
 }
 
+$bloghash_args['tax_query'] = $tax_query;
 $bloghash_args = apply_filters( 'bloghash_popular_post_query_args', $bloghash_args );
 
 $bloghash_posts = new WP_Query( $bloghash_args );
@@ -50,16 +59,14 @@ if ( ! $bloghash_posts->have_posts() ) {
 }
 
 $bloghash_popular_post_elements = (array) bloghash_option( 'popular_post_elements' );
+$bloghash_classes = bloghash_template_part_column_classes( $bloghash_args['posts_per_page'] );
 
-$bloghash_posts_per_page = 'col-md-' . ceil( esc_attr( 12 / $bloghash_args['posts_per_page'] ) ) . ' col-sm-6 col-xs-12';
-$count                   = 0; // Initialize counter
 while ( $bloghash_posts->have_posts() ) :
 	$bloghash_posts->the_post();
-	$count++; // Increment counter
 	// Post items HTML markup.
 	ob_start();
 	?>
-	<div class="<?php echo esc_attr( $bloghash_posts_per_page ); ?>">
+	<div class="<?php echo esc_attr( $bloghash_classes ); ?>">
 		<div class="bloghash-post-item style-4">
 			<div class="bloghash-post-thumb">
 				<a href="<?php echo esc_url( bloghash_entry_get_permalink() ); ?>" tabindex="0"></a>

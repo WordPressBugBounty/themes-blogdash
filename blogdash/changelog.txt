@@ -1,3 +1,8 @@
+= 1.0.2 =
+* Updated legacy customizer settings—such as categories—to use IDs instead of slugs for improved consistency and reliability.
+* Updated tax query logic to filter by category in Editor Choice.
+* Updated tax query logic to filter by category in Popular Post.
+
 = 1.0.1 =
 * Fixed dark mode color issue.
 * Fixed header height issue.

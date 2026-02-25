@@ -2,11 +2,11 @@
 Contributors: Peregrinethemes
 Tags: two-columns, right-sidebar, left-sidebar, footer-widgets, blog, news, entertainment, custom-background, custom-menu, custom-logo, post-formats, sticky-post, editor-style, threaded-comments, translation-ready, custom-colors, featured-images, full-width-template, theme-options, flexible-header, wide-blocks
 Requires at least: 5.0
-Tested up to: 6.6
+Tested up to: 6.9
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 
 A lightweight and highly customizable multi-purpose blog theme that makes it easy for anyone to create their perfect website.
 
@@ -28,6 +28,11 @@ Blogdash WordPress Theme, Copyright (c) 2024, Peregrinethemes
 Blogdash is distributed under the terms of the GNU GPLs
 
 == Changelog ==
+
+= 1.0.2 =
+* Updated legacy customizer settings—such as categories—to use IDs instead of slugs for improved consistency and reliability.
+* Updated tax query logic to filter by category in Editor Choice.
+* Updated tax query logic to filter by category in Popular Post.
 
 = 1.0.1 =
 * Fixed dark mode color issue.

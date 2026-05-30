@@ -60,7 +60,7 @@ if ( ! class_exists( 'Blogdash_Customizer_Popular_Post' ) ) :
 
 			// Title.
 			$options['setting']['bloghash_popular_post_title'] = array(
-				'transport'         => 'refresh',
+				'transport'         => 'postMessage',
 				'sanitize_callback' => 'sanitize_text_field',
 				'control'           => array(
 					'type'     => 'bloghash-text',
@@ -74,11 +74,17 @@ if ( ! class_exists( 'Blogdash_Customizer_Popular_Post' ) ) :
 						),
 					),
 				),
+				'partial'           => array(
+					'selector'            => '#popular_post',
+					'render_callback'     => 'blogdash_blog_popular_post',
+					'container_inclusive' => true,
+					'fallback_refresh'    => true,
+				),
 			);
 
 			// Popular Post Data Source
 			$options['setting']['bloghash_popular_post_data_source'] = array(
-				'transport'         => 'refresh',
+				'transport'         => 'postMessage',
 				'sanitize_callback' => 'bloghash_sanitize_select',
 				'control'           => array(
 					'type'        => 'bloghash-select',
@@ -97,11 +103,17 @@ if ( ! class_exists( 'Blogdash_Customizer_Popular_Post' ) ) :
 						),
 					),
 				),
+				'partial'           => array(
+					'selector'            => '#popular_post',
+					'render_callback'     => 'blogdash_blog_popular_post',
+					'container_inclusive' => true,
+					'fallback_refresh'    => true,
+				),
 			);
 
 			// Popular Post category.
 			$options['setting']['bloghash_popular_post_category'] = array(
-				'transport'         => 'refresh',
+				'transport'         => 'postMessage',
 				'sanitize_callback' => 'bloghash_sanitize_select',
 				'control'           => array(
 					'type'        => 'bloghash-select',
@@ -124,11 +136,17 @@ if ( ! class_exists( 'Blogdash_Customizer_Popular_Post' ) ) :
 						),
 					),
 				),
+				'partial'           => array(
+					'selector'            => '#popular_post',
+					'render_callback'     => 'blogdash_blog_popular_post',
+					'container_inclusive' => true,
+					'fallback_refresh'    => true,
+				),
 			);
 
 			// Popular Post post item.
 			$options['setting']['bloghash_popular_post_post'] = array(
-				'transport'         => 'refresh',
+				'transport'         => 'postMessage',
 				'sanitize_callback' => 'bloghash_sanitize_select',
 				'control'           => array(
 					'type'        => 'bloghash-select',
@@ -151,6 +169,12 @@ if ( ! class_exists( 'Blogdash_Customizer_Popular_Post' ) ) :
 						),
 					),
 				),
+				'partial'           => array(
+					'selector'            => '#popular_post',
+					'render_callback'     => 'blogdash_blog_popular_post',
+					'container_inclusive' => true,
+					'fallback_refresh'    => true,
+				),
 			);
 
 			// Popular Post count.
@@ -163,7 +187,7 @@ if ( ! class_exists( 'Blogdash_Customizer_Popular_Post' ) ) :
 					'label'       => esc_html__( 'Post Number', 'blogdash' ),
 					'description' => esc_html__( 'Set the number of visible posts.', 'blogdash' ),
 					'min'         => 1,
-					'max'         => 4,
+					'max'         => 8,
 					'step'        => 1,
 					'unit'        => '',
 					'required'    => array(
@@ -186,7 +210,7 @@ if ( ! class_exists( 'Blogdash_Customizer_Popular_Post' ) ) :
 				),
 				'partial'           => array(
 					'selector'            => '#popular_post',
-					'render_callback'     => 'bloghash_blog_popular_post',
+					'render_callback'     => 'blogdash_blog_popular_post',
 					'container_inclusive' => true,
 					'fallback_refresh'    => true,
 				),

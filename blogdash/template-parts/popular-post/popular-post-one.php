@@ -35,14 +35,14 @@ $tax_query = array(
 	),
 );
 
-if ( ! empty( $bloghash_popular_post_categories && $bloghash_popular_post_data_source == 'category' ) ) {
+if ( ! empty( $bloghash_popular_post_categories ) && $bloghash_popular_post_data_source == 'category' ) {
 	$tax_query[] = array(
 		'taxonomy' => 'category',
 		'field'    => 'term_id',
 		'terms'    => $bloghash_popular_post_categories,
 		'operator' => 'IN',
 	);
-} elseif ( ! empty( $bloghash_popular_post_posts && $bloghash_popular_post_data_source == 'post' ) ) {
+} elseif ( ! empty( $bloghash_popular_post_posts ) && $bloghash_popular_post_data_source == 'post' ) {
 	$bloghash_args['post__in'] = $bloghash_popular_post_posts;
 	$bloghash_args['orderby'] = 'post__in'; // Override orderby to maintain the order of selected posts.
 	$bloghash_args['posts_per_page'] = count( $bloghash_popular_post_posts ); // Set posts_per_page to the number of selected posts.

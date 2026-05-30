@@ -1,3 +1,7 @@
+= 1.0.3 =
+* Customizer partial refresh issue fixed for "Popular posts" and "Editor choice" section.
+* Increased post number limit for "Popular posts" and "Editor choice" sections from 4 to 8 in customizer.
+
 = 1.0.2 =
 * Updated legacy customizer settings—such as categories—to use IDs instead of slugs for improved consistency and reliability.
 * Updated tax query logic to filter by category in Editor Choice.
